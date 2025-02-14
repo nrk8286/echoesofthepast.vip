@@ -43,3 +43,9 @@ app.get('/api/market', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+require('dotenv').config();
+
+const dbHost = process.env.DB_HOST;
+const apiKey = process.env.API_KEY;
+// Now you can use these variables in your application
+
