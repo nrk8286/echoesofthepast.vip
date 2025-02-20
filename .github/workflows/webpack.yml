@@ -26,11 +26,16 @@ jobs:
       run: |
         npm install
         npx webpack
-            - name: Cache
-  - uses: actions/cache@v4.2.0
 
-  - name: cloudflare/wrangler-action@v3.14.0- 
+    - name: Cache
+      uses: actions/cache@v4.2.0
 
-          
-   
-   
+    - name: Deploy to Cloudflare
+      uses: cloudflare/wrangler-action@v3.14.0
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        scriptName: "echoesofthepast"
+        environment: "production"
+        workingDirectory: "./"
+      run: wrangler publish
