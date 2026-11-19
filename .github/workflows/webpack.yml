@@ -1,41 +1,29 @@
-name: NodeJS with Webpack
+name: Source validation
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Build
-      run: |
-        npm install
-        npx webpack
-
-    - name: Cache
-      uses: actions/cache@v4.2.0
-
-    - name: Deploy to Cloudflare
-      uses: cloudflare/wrangler-action@v3.14.0
-      with:
-        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        scriptName: "echoesofthepast"
-        environment: "production"
-        workingDirectory: "./"
-      run: wrangler publish
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check JavaScript syntax
+        run: |
+          node --check script.js
+          node --check server.js
+      - name: Check required static files
+        shell: bash
+        run: |
+          test -s index.html
+          test -s market.html
+          test -s styles.css
