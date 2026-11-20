@@ -47,7 +47,11 @@ async function loadMarket() {
         artifacts.forEach(artifact => {
             const div = document.createElement('div');
             div.className = 'artifact';
-            div.innerHTML = `<h3>${artifact.name}</h3><p>${artifact.description}</p>`;
+            const title = document.createElement('h3');
+            title.textContent = artifact.name;
+            const description = document.createElement('p');
+            description.textContent = artifact.description;
+            div.append(title, description);
             artifactsDiv.appendChild(div);
         });
     } else {
